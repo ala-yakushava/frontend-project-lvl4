@@ -1,12 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../actions';
+import { channelsSelector } from '../selectors';
 
 const mapStateToProps = (state) => {
-  const props = {
-    channels: state.channels,
-  };
-  return props;
+  const channels = channelsSelector(state);
+  return { channels };
 };
 
 const actionCreators = {

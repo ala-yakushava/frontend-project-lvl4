@@ -2,12 +2,11 @@ import io from 'socket.io-client';
 import React from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../actions';
+import { messagesSelector } from '../selectors';
 
 const mapStateToProps = (state) => {
-  const props = {
-    messages: state.messages,
-  };
-  return props;
+  const messages = messagesSelector(state);
+  return { messages };
 };
 
 const actionCreators = {

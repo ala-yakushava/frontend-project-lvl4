@@ -3,8 +3,7 @@ import { handleActions } from 'redux-actions';
 import { reducer as formReducer } from 'redux-form';
 import gon from 'gon';
 import * as actions from '../actions';
-
-console.log(gon);
+import normalize from '../../lib/normalize';
 
 const messageFetchingState = handleActions({
   [actions.fetchMessageRequest]() {
@@ -22,13 +21,18 @@ const currentChannelId = handleActions({
 }, gon.currentChannelId);
 
 const channels = handleActions({
-}, gon.channels);
+}, normalize(gon.channels));
 
 const messages = handleActions({
   [actions.getMessage](state, { payload: message }) {
-    return [...state, message];
+    const { byId, allIds } = state;
+    return {
+      ...state,
+      byId: { ...byId, [message.id]: message },
+      allIds: [...allIds, message.id],
+    };
   },
-}, gon.messages);
+}, normalize(gon.messages));
 
 export default combineReducers({
   messageFetchingState,
