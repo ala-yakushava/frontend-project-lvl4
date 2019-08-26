@@ -1,16 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
+import NameContext from '../context';
 import * as actions from '../actions';
-import NameContext from '../name-context';
+import { getCurrentChannelId } from '../selectors';
 
 const mapStateToProps = (state) => {
-  const props = {
-    text: state.text,
-    currentChannelId: state.currentChannelId,
-    messageFetchingState: state.messageFetchingState,
-  };
-  return props;
+  const currentChannelId = getCurrentChannelId(state);
+  const { messageFetchingState } = state;
+  return { currentChannelId, messageFetchingState };
 };
 
 const actionCreators = {
@@ -28,18 +26,34 @@ class NewMessageForm extends React.Component {
 
   render() {
     const {
-      handleSubmit, submitting, pristine, error, messageFetchingState,
+      handleSubmit,
+      submitting,
+      pristine,
+      sendDataState,
     } = this.props;
 
     const isDisabled = submitting || pristine;
-    console.log(messageFetchingState, error);
+
+    const getNote = (state) => {
+      switch (state) {
+        case 'requested':
+          return <span className="text-warning">Ожидайте...</span>;
+        case 'failed':
+          return <span className="text-danger">Произошла ошибка, попробуйте позже.</span>;
+        case 'finished':
+          return null;
+        default:
+          return null;
+      }
+    };
 
     return (
-      <form className="mt-5" onSubmit={handleSubmit(this.handleSubmit)}>
-        <div className="form-group mb-4">
+      <form className="col-12 align-self-end p-0" onSubmit={handleSubmit(this.handleSubmit)}>
+        { getNote(sendDataState) }
+        <div className="form-group my-4">
           <Field className="form-control" name="text" required component="textarea" type="text" />
         </div>
-        <button type="submit" disabled={isDisabled} className="btn btn-outline-info btn-lg d-flex ml-auto px-5" value="Add">Отправить</button>
+        <button type="submit" disabled={isDisabled} className="btn btn-outline-info btn-block btn-lg" value="Add">Отправить</button>
       </form>
     );
   }

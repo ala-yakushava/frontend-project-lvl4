@@ -1,41 +1,69 @@
+import { omit, without } from 'lodash';
+import gon from 'gon';
 import { combineReducers } from 'redux';
 import { handleActions } from 'redux-actions';
 import { reducer as formReducer } from 'redux-form';
-import gon from 'gon';
+
 import * as actions from '../actions';
 import normalize from '../../lib/normalize';
 
-const messageFetchingState = handleActions({
-  [actions.fetchMessageRequest]() {
+const sendDataState = handleActions({
+  [actions.sendDataRequest]() {
     return 'requested';
   },
-  [actions.fetchMessageFailure]() {
+  [actions.sendDataFailure]() {
     return 'failed';
   },
-  [actions.fetchMessageSuccess]() {
+  [actions.sendDataSuccess]() {
     return 'finished';
   },
 }, 'none');
 
 const currentChannelId = handleActions({
+  [actions.setCurrentChannel](state, { payload: { id } }) {
+    return id;
+  },
 }, gon.currentChannelId);
 
 const channels = handleActions({
-}, normalize(gon.channels));
-
-const messages = handleActions({
-  [actions.getMessage](state, { payload: message }) {
+  [actions.getNewChannel](state, { payload: { attributes } }) {
     const { byId, allIds } = state;
     return {
       ...state,
-      byId: { ...byId, [message.id]: message },
-      allIds: [...allIds, message.id],
+      byId: { ...byId, [attributes.id]: attributes },
+      allIds: [...allIds, attributes.id],
+    };
+  },
+  [actions.getRemovedChannel](state, { payload: { id } }) {
+    const { byId, allIds } = state;
+    return {
+      byId: omit(byId, id),
+      allIds: without(allIds, id),
+    };
+  },
+  [actions.getRenamedChannel](state, { payload: { attributes } }) {
+    const { byId, allIds } = state;
+    return {
+      ...state,
+      byId: { ...byId, [attributes.id]: attributes },
+      allIds,
+    };
+  },
+}, normalize(gon.channels));
+
+const messages = handleActions({
+  [actions.getNewMessage](state, { payload: { attributes } }) {
+    const { byId, allIds } = state;
+    return {
+      ...state,
+      byId: { ...byId, [attributes.id]: attributes },
+      allIds: [...allIds, attributes.id],
     };
   },
 }, normalize(gon.messages));
 
 export default combineReducers({
-  messageFetchingState,
+  sendDataState,
   currentChannelId,
   channels,
   messages,

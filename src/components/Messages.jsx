@@ -2,43 +2,43 @@ import io from 'socket.io-client';
 import React from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../actions';
-import { messagesSelector } from '../selectors';
+import { filteredMessagesSelector } from '../selectors';
 
 const mapStateToProps = (state) => {
-  const messages = messagesSelector(state);
+  const messages = filteredMessagesSelector(state);
   return { messages };
 };
 
 const actionCreators = {
-  getMessage: actions.getMessage,
+  getNewMessage: actions.getNewMessage,
 };
 
 @connect(mapStateToProps, actionCreators)
 class Messages extends React.Component {
   componentDidMount() {
-    const { getMessage } = this.props;
+    const { getNewMessage } = this.props;
     const port = process.env.PORT;
     const socket = io(port);
 
-    socket.on('newMessage', data => getMessage(data.data.attributes));
+    socket.on('newMessage', data => getNewMessage(data.data));
   }
 
   render() {
     const { messages } = this.props;
 
     if (messages.length === 0) {
-      return <b>Начните беседу</b>;
+      return <p className="w-100">Здесь пока пусто...</p>;
     }
 
     return (
-      <ul className="list-group">
+      <div className="list-group w-100">
         {messages.map(item => (
           <div key={item.id} className="mb-4">
             <p className="text-info text-right font-weight-bold text-capitalize">{item.author}</p>
             <p className="alert alert-info">{item.text}</p>
           </div>
         ))}
-      </ul>
+      </div>
     );
   }
 }
