@@ -5,12 +5,12 @@ html(lang="en")
     script.
       var gon = !{JSON.stringify(gon)};
   body.bg-light
-    .container
-      nav.navbar.navbar-expand-lg.navbar-light.bg-faded
-        a.navbar-brand(href="/") Chat
+    nav.navbar.navbar-expand-lg.navbar-dark.bg-info
+      .container
+        a.navbar-brand.text-uppercase.font-weight-bold(href="/") Chat
         button.navbar-toggler(data-toggle="collapse" data-target="#navbarSupportedContent")
           span.navbar-toggler-icon
-    .container
+    .container.mt-5
       #chat
       // block content
     script(src='/assets/main.js')

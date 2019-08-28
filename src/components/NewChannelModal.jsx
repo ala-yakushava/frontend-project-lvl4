@@ -1,11 +1,13 @@
 import React from 'react';
 import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
 import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
+import Button from 'react-bootstrap/Button';
+
 import NewChannelForm from './NewChannelForm';
 
 function MyVerticallyCenteredModal(props) {
   const { onHide } = props;
+
   return (
     <Modal
       {...props}
@@ -14,10 +16,10 @@ function MyVerticallyCenteredModal(props) {
     >
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
-          Добавить канал
+          Новый канал
         </Modal.Title>
       </Modal.Header>
-      <Modal.Body>
+      <Modal.Body className="my-4">
         <NewChannelForm onHide={onHide} />
       </Modal.Body>
     </Modal>
@@ -29,7 +31,12 @@ function App() {
 
   return (
     <ButtonToolbar>
-      <Button variant="outline-info" size="lg" block onClick={() => setModalShow(true)}>
+      <Button
+        variant="outline-info"
+        size="lg"
+        block
+        onClick={() => setModalShow(true)}
+      >
         Создать канал
       </Button>
 

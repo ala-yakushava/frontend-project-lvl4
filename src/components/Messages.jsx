@@ -1,6 +1,7 @@
 import io from 'socket.io-client';
 import React from 'react';
 import { connect } from 'react-redux';
+
 import * as actions from '../actions';
 import { filteredMessagesSelector } from '../selectors';
 
@@ -27,15 +28,19 @@ class Messages extends React.Component {
     const { messages } = this.props;
 
     if (messages.length === 0) {
-      return <p className="w-100">Здесь пока пусто...</p>;
+      return <p className="mb-5">Здесь пока пусто...</p>;
     }
 
     return (
-      <div className="list-group w-100">
+      <div className="list-group">
         {messages.map(item => (
           <div key={item.id} className="mb-4">
-            <p className="text-info text-right font-weight-bold text-capitalize">{item.author}</p>
-            <p className="alert alert-info">{item.text}</p>
+            <p className="text-info text-right font-weight-bold text-capitalize">
+              {item.author}
+            </p>
+            <p className="alert alert-info">
+              {item.text}
+            </p>
           </div>
         ))}
       </div>

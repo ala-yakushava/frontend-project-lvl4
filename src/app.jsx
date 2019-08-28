@@ -1,11 +1,13 @@
 import React from 'react';
 import { render } from 'react-dom';
+import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
-import { createStore, applyMiddleware } from 'redux';
 
 import reducers from './reducers';
 import App from './components/App';
+import UserContext from './UserContext';
+import getUserName from '../lib/getUserName';
 
 /* eslint-disable no-underscore-dangle */
 // const ext = window.__REDUX_DEVTOOLS_EXTENSION__;
@@ -21,9 +23,15 @@ const store = createStore(
 );
 
 export default () => {
+  const user = {
+    name: getUserName(),
+  };
+
   render(
     <Provider store={store}>
-      <App />
+      <UserContext.Provider value={user}>
+        <App />
+      </UserContext.Provider>
     </Provider>,
     document.getElementById('chat'),
   );

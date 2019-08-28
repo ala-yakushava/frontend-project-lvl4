@@ -1,24 +1,26 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
-import NameContext from '../context';
+import UserContext from '../UserContext';
+
 import * as actions from '../actions';
-import { getCurrentChannelId } from '../selectors';
 
 const mapStateToProps = (state) => {
-  const currentChannelId = getCurrentChannelId(state);
-  const { messageFetchingState } = state;
-  return { currentChannelId, messageFetchingState };
+  const { currentChannelId, notification } = state;
+  return { currentChannelId, notification };
 };
 
 const actionCreators = {
   addMessage: actions.addMessage,
 };
 
+@connect(mapStateToProps, actionCreators)
 class NewMessageForm extends React.Component {
+  static contextType = UserContext;
+
   handleSubmit = ({ text }) => {
     const { currentChannelId, addMessage, reset } = this.props;
-    const name = this.context;
+    const { name } = this.context;
     const data = { attributes: { text, author: name } };
     addMessage({ data }, currentChannelId);
     reset();
@@ -29,39 +31,46 @@ class NewMessageForm extends React.Component {
       handleSubmit,
       submitting,
       pristine,
-      sendDataState,
+      notification,
     } = this.props;
 
     const isDisabled = submitting || pristine;
 
-    const getNote = (state) => {
-      switch (state) {
+    const renderNotice = (notice) => {
+      switch (notice) {
         case 'requested':
           return <span className="text-warning">Ожидайте...</span>;
         case 'failed':
           return <span className="text-danger">Произошла ошибка, попробуйте позже.</span>;
         case 'finished':
-          return null;
+          return <span className="text-success">Успех.</span>;
         default:
           return null;
       }
     };
 
     return (
-      <form className="col-12 align-self-end p-0" onSubmit={handleSubmit(this.handleSubmit)}>
-        { getNote(sendDataState) }
+      <form className="col-12 p-0" onSubmit={handleSubmit(this.handleSubmit)}>
+        { renderNotice(notification) }
         <div className="form-group my-4">
-          <Field className="form-control" name="text" required component="textarea" type="text" />
+          <Field
+            component="textarea"
+            type="text"
+            name="text"
+            className="form-control"
+            placeholder="Введите текст"
+            required
+            autoFocus
+          />
         </div>
-        <button type="submit" disabled={isDisabled} className="btn btn-outline-info btn-block btn-lg" value="Add">Отправить</button>
+        <button type="submit" className="btn btn-outline-info btn-block btn-lg" disabled={isDisabled}>
+          Отправить
+        </button>
       </form>
     );
   }
 }
 
-NewMessageForm.contextType = NameContext;
-const ConnectedNewMessageForm = connect(mapStateToProps, actionCreators)(NewMessageForm);
-
 export default reduxForm({
   form: 'newMessage',
-})(ConnectedNewMessageForm);
+})(NewMessageForm);
