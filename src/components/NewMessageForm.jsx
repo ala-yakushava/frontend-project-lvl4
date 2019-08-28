@@ -4,6 +4,7 @@ import { Field, reduxForm } from 'redux-form';
 import UserContext from '../UserContext';
 
 import * as actions from '../actions';
+import ResultRequestNote from './ResultRequestNote';
 
 const mapStateToProps = (state) => {
   const { currentChannelId, notification } = state;
@@ -36,22 +37,9 @@ class NewMessageForm extends React.Component {
 
     const isDisabled = submitting || pristine;
 
-    const renderNotice = (notice) => {
-      switch (notice) {
-        case 'requested':
-          return <span className="text-warning">Ожидайте...</span>;
-        case 'failed':
-          return <span className="text-danger">Произошла ошибка, попробуйте позже.</span>;
-        case 'finished':
-          return <span className="text-success">Успех.</span>;
-        default:
-          return null;
-      }
-    };
-
     return (
       <form className="col-12 p-0" onSubmit={handleSubmit(this.handleSubmit)}>
-        { renderNotice(notification) }
+        <ResultRequestNote notification={notification} />
         <div className="form-group my-4">
           <Field
             component="textarea"
