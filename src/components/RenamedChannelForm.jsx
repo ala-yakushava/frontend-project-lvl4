@@ -8,13 +8,17 @@ import Col from 'react-bootstrap/Col';
 
 import * as actions from '../actions';
 
-const mapStateToProps = state => state;
+const mapStateToProps = (state) => {
+  const { requestState } = state;
+  return { requestState };
+};
 
 const actionCreators = {
   renamedChannel: actions.renamedChannel,
 };
 
 @connect(mapStateToProps, actionCreators)
+@reduxForm({ form: 'renamedChannel' })
 class RenamedChannelForm extends React.Component {
   handleSubmit = ({ channelName }) => {
     const { channelId, renamedChannel, onHide } = this.props;
@@ -38,7 +42,6 @@ class RenamedChannelForm extends React.Component {
               className="form-control form-control-lg"
               placeholder="Название канала"
               required
-              autoFocus
             />
           </Col>
           <Col sm="2">
@@ -52,6 +55,4 @@ class RenamedChannelForm extends React.Component {
   }
 }
 
-export default reduxForm({
-  form: 'renamedChannel',
-})(RenamedChannelForm);
+export default RenamedChannelForm;

@@ -4,11 +4,10 @@ import { Field, reduxForm } from 'redux-form';
 import UserContext from '../UserContext';
 
 import * as actions from '../actions';
-import ResultRequestNote from './ResultRequestNote';
 
 const mapStateToProps = (state) => {
-  const { currentChannelId, notification } = state;
-  return { currentChannelId, notification };
+  const { currentChannelId } = state;
+  return { currentChannelId };
 };
 
 const actionCreators = {
@@ -16,6 +15,7 @@ const actionCreators = {
 };
 
 @connect(mapStateToProps, actionCreators)
+@(reduxForm({ form: 'newMessage' }))
 class NewMessageForm extends React.Component {
   static contextType = UserContext;
 
@@ -28,18 +28,11 @@ class NewMessageForm extends React.Component {
   };
 
   render() {
-    const {
-      handleSubmit,
-      submitting,
-      pristine,
-      notification,
-    } = this.props;
-
+    const { handleSubmit, submitting, pristine } = this.props;
     const isDisabled = submitting || pristine;
 
     return (
       <form className="col-12 p-0" onSubmit={handleSubmit(this.handleSubmit)}>
-        <ResultRequestNote notification={notification} />
         <div className="form-group my-4">
           <Field
             component="textarea"
@@ -59,6 +52,4 @@ class NewMessageForm extends React.Component {
   }
 }
 
-export default reduxForm({
-  form: 'newMessage',
-})(NewMessageForm);
+export default NewMessageForm;

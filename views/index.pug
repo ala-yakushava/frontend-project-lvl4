@@ -1,16 +1,16 @@
 doctype html
 html(lang="en")
   head
-    title= Title
+    title Simply Chat
+    meta(name="viewport" content="width=device-width, initial-scale=1")
     script.
       var gon = !{JSON.stringify(gon)};
   body.bg-light
     nav.navbar.navbar-expand-lg.navbar-dark.bg-info
       .container
-        a.navbar-brand.text-uppercase.font-weight-bold(href="/") Chat
+        a.navbar-brand.font-weight-bold(href="/") Simply Chat
         button.navbar-toggler(data-toggle="collapse" data-target="#navbarSupportedContent")
           span.navbar-toggler-icon
-    .container.mt-5
-      #chat
+    #chat
       // block content
     script(src='/assets/main.js')

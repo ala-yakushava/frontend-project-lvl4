@@ -7,14 +7,14 @@ import { reducer as formReducer } from 'redux-form';
 import * as actions from '../actions';
 import normalize from '../../lib/normalize';
 
-const notification = handleActions({
-  [actions.runDataRequest]() {
+const requestState = handleActions({
+  [actions.updateDataRequest]() {
     return 'requested';
   },
-  [actions.runDataFailure]() {
+  [actions.updateDataFailure]() {
     return 'failed';
   },
-  [actions.runDataSuccess]() {
+  [actions.updateDataSuccess]() {
     return 'finished';
   },
 }, 'none');
@@ -63,7 +63,7 @@ const messages = handleActions({
 }, normalize(gon.messages));
 
 export default combineReducers({
-  notification,
+  requestState,
   currentChannelId,
   channels,
   messages,

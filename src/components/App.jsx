@@ -13,11 +13,13 @@ import NewMessageForm from './NewMessageForm';
 import NewChannelModal from './NewChannelModal';
 import RemovedChannelModal from './RemovedChannelModal';
 import RenamedChannelModal from './RenamedChannelModal';
+import AlertDismissible from './AlertDismissible';
 
 const mapStateToProps = (state) => {
   const currentChannelId = getCurrentChannelId(state);
   const channels = channelsSelector(state);
-  return { channels, currentChannelId };
+  const { requestState } = state;
+  return { requestState, channels, currentChannelId };
 };
 
 const actionCreators = {
@@ -39,6 +41,11 @@ class App extends React.Component {
     socket.on('removeChannel', data => getRemovedChannel(data.data));
     socket.on('renameChannel', data => getRenamedChannel(data.data));
   }
+
+  isError = () => {
+    const { requestState } = this.props;
+    return requestState === 'failed';
+  };
 
   handleSetCurrentChannel(id) {
     const { setCurrentChannel } = this.props;
@@ -84,23 +91,28 @@ class App extends React.Component {
     );
 
     return (
-      <Tab.Container id="left-tabs-example" defaultActiveKey={currentChannelId}>
-        <Row>
-          <Col md={4} className="mb-5">
-            <Nav variant="pills" className="flex-column mb-5">
-              {channels.map(renderChannel)}
-            </Nav>
-            <NewChannelModal />
-          </Col>
-          <Col md={{ span: 7, offset: 1 }} className="mb-5">
-            <Tab.Content>
-              {channels.map(renderPanel)}
-            </Tab.Content>
-            <Messages />
-            <NewMessageForm />
-          </Col>
-        </Row>
-      </Tab.Container>
+      <>
+        {this.isError() ? <AlertDismissible /> : null}
+        <div className="container mt-5">
+          <Tab.Container id="left-tabs-example" defaultActiveKey={currentChannelId}>
+            <Row>
+              <Col md={4} className="mb-5">
+                <Nav variant="pills" className="flex-column mb-5">
+                  {channels.map(renderChannel)}
+                </Nav>
+                <NewChannelModal />
+              </Col>
+              <Col md={{ span: 7, offset: 1 }} className="mb-5">
+                <Tab.Content>
+                  {channels.map(renderPanel)}
+                </Tab.Content>
+                <Messages />
+                <NewMessageForm />
+              </Col>
+            </Row>
+          </Tab.Container>
+        </div>
+      </>
     );
   }
 }

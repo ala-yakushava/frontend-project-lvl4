@@ -4,13 +4,17 @@ import { Field, reduxForm } from 'redux-form';
 
 import * as actions from '../actions';
 
-const mapStateToProps = state => state;
+const mapStateToProps = (state) => {
+  const { requestState } = state;
+  return { requestState };
+};
 
 const actionCreators = {
   addChannel: actions.addChannel,
 };
 
 @connect(mapStateToProps, actionCreators)
+@reduxForm({ form: 'newChannel' })
 class NewChannelForm extends React.Component {
   handleSubmit = ({ channelName }) => {
     const { addChannel, onHide } = this.props;
@@ -34,7 +38,6 @@ class NewChannelForm extends React.Component {
               className="form-control form-control-lg"
               placeholder="Название канала"
               required
-              autoFocus
             />
           </div>
           <button type="submit" className="btn btn-lg btn-info" disabled={isDisabled}>
@@ -46,6 +49,4 @@ class NewChannelForm extends React.Component {
   }
 }
 
-export default reduxForm({
-  form: 'newChannel',
-})(NewChannelForm);
+export default NewChannelForm;

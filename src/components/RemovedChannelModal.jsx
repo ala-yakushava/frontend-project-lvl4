@@ -3,7 +3,7 @@ import Modal from 'react-bootstrap/Modal';
 import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
 import Button from 'react-bootstrap/Button';
 
-function MyVerticallyCenteredModal(props) {
+const MyVerticallyCenteredModal = (props) => {
   const {
     show,
     onHide,
@@ -44,9 +44,9 @@ function MyVerticallyCenteredModal(props) {
       </Modal.Footer>
     </Modal>
   );
-}
+};
 
-function App(props) {
+const RemovedChannelModal = (props) => {
   const [modalShow, setModalShow] = React.useState(false);
 
   return (
@@ -66,6 +66,6 @@ function App(props) {
       />
     </ButtonToolbar>
   );
-}
+};
 
-export default App;
+export default RemovedChannelModal;

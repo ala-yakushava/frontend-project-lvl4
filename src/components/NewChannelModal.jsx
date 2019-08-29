@@ -5,7 +5,7 @@ import Button from 'react-bootstrap/Button';
 
 import NewChannelForm from './NewChannelForm';
 
-function MyVerticallyCenteredModal(props) {
+const MyVerticallyCenteredModal = (props) => {
   const { onHide } = props;
 
   return (
@@ -24,9 +24,9 @@ function MyVerticallyCenteredModal(props) {
       </Modal.Body>
     </Modal>
   );
-}
+};
 
-function App() {
+const NewChannelModal = () => {
   const [modalShow, setModalShow] = React.useState(false);
 
   return (
@@ -46,6 +46,6 @@ function App() {
       />
     </ButtonToolbar>
   );
-}
+};
 
-export default App;
+export default NewChannelModal;

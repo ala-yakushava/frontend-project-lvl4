@@ -5,7 +5,7 @@ import Button from 'react-bootstrap/Button';
 
 import RenamedChannelForm from './RenamedChannelForm';
 
-function MyVerticallyCenteredModal(props) {
+const MyVerticallyCenteredModal = (props) => {
   const {
     show,
     onHide,
@@ -31,9 +31,9 @@ function MyVerticallyCenteredModal(props) {
       </Modal.Body>
     </Modal>
   );
-}
+};
 
-function App(props) {
+const RenamedChannelModal = (props) => {
   const [modalShow, setModalShow] = React.useState(false);
 
   return (
@@ -53,6 +53,6 @@ function App(props) {
       />
     </ButtonToolbar>
   );
-}
+};
 
-export default App;
+export default RenamedChannelModal;

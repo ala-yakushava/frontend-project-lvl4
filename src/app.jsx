@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 
@@ -10,16 +10,16 @@ import UserContext from './UserContext';
 import getUserName from '../lib/getUserName';
 
 /* eslint-disable no-underscore-dangle */
-// const ext = window.__REDUX_DEVTOOLS_EXTENSION__;
-// const devtoolMiddleware = ext && ext();
+const ext = window.__REDUX_DEVTOOLS_EXTENSION__;
+const devtoolMiddleware = ext && ext();
 /* eslint-enable */
 
 const store = createStore(
   reducers,
-  // compose(
-  applyMiddleware(thunk),
-  //   devtoolMiddleware,
-  // ),
+  compose(
+    applyMiddleware(thunk),
+    devtoolMiddleware,
+  ),
 );
 
 export default () => {
