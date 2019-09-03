@@ -1,58 +1,23 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { Field, reduxForm } from 'redux-form';
 import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 
-import * as actions from '../actions';
+const RenamedChannelForm = (props) => {
+  const { channel, renameChannel } = props;
 
-const mapStateToProps = (state) => {
-  const { requestState } = state;
-  return { requestState };
-};
-
-const actionCreators = {
-  renamedChannel: actions.renamedChannel,
-};
-
-@connect(mapStateToProps, actionCreators)
-@reduxForm({ form: 'renamedChannel' })
-class RenamedChannelForm extends React.Component {
-  handleSubmit = ({ channelName }) => {
-    const { channelId, renamedChannel, onHide } = this.props;
+  const handleSubmit = (e) => {
+    const channelName = e.target.value;
     const data = { attributes: { name: channelName } };
-    renamedChannel({ data }, channelId);
-    onHide();
+    renameChannel({ data }, channel.id);
   };
 
-  render() {
-    const { handleSubmit, submitting, pristine } = this.props;
-    const isDisabled = submitting || pristine;
-
-    return (
-      <Form onSubmit={handleSubmit(this.handleSubmit)}>
-        <Form.Group as={Row}>
-          <Col sm="8">
-            <Field
-              component="input"
-              type="text"
-              name="channelName"
-              className="form-control form-control-lg"
-              placeholder="Название канала"
-              required
-            />
-          </Col>
-          <Col sm="2">
-            <Button type="submit" variant="outline-info" size="lg" disabled={isDisabled}>
-              Изменить
-            </Button>
-          </Col>
-        </Form.Group>
-      </Form>
-    );
-  }
-}
+  return (
+    channel.removable
+      ? (
+        <Form.Control plaintext defaultValue={channel.name} onBlur={handleSubmit} />
+      ) : (
+        <Form.Control plaintext defaultValue={channel.name} readOnly disabled />
+      )
+  );
+};
 
 export default RenamedChannelForm;

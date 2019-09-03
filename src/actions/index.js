@@ -4,6 +4,7 @@ import { createAction } from 'redux-actions';
 import routes from '../routes';
 
 export const setCurrentChannel = createAction('CHANNEL_SELECT');
+export const toggleEditMode = createAction('MODE_EDIT_TOGGLE');
 
 export const getNewMessage = createAction('MESSAGE_ADDED_GET');
 export const getNewChannel = createAction('CHANNEL_ADDED_GET');
@@ -50,7 +51,7 @@ export const removeChannel = id => async (dispatch) => {
   }
 };
 
-export const renamedChannel = (data, id) => async (dispatch) => {
+export const renameChannel = (data, id) => async (dispatch) => {
   dispatch(updateDataRequest());
   try {
     const url = routes.channelPath(id);

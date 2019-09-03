@@ -5,26 +5,33 @@ import Tab from 'react-bootstrap/Tab';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Nav from 'react-bootstrap/Nav';
+import Button from 'react-bootstrap/Button';
 
 import * as actions from '../actions';
-import { getCurrentChannelId, channelsSelector } from '../selectors';
+import { channelsSelector } from '../selectors';
 import Messages from './Messages';
 import NewMessageForm from './NewMessageForm';
 import NewChannelModal from './NewChannelModal';
 import RemovedChannelModal from './RemovedChannelModal';
-import RenamedChannelModal from './RenamedChannelModal';
+import RenamedChannelForm from './RenamedChannelForm';
 import AlertDismissible from './AlertDismissible';
 
 const mapStateToProps = (state) => {
-  const currentChannelId = getCurrentChannelId(state);
   const channels = channelsSelector(state);
-  const { requestState } = state;
-  return { requestState, channels, currentChannelId };
+  const { editMode, currentChannelId, requestState } = state;
+  return {
+    editMode,
+    requestState,
+    channels,
+    currentChannelId,
+  };
 };
 
 const actionCreators = {
   setCurrentChannel: actions.setCurrentChannel,
+  toggleEditMode: actions.toggleEditMode,
   removeChannel: actions.removeChannel,
+  renameChannel: actions.renameChannel,
   getNewChannel: actions.getNewChannel,
   getRemovedChannel: actions.getRemovedChannel,
   getRenamedChannel: actions.getRenamedChannel,
@@ -47,37 +54,41 @@ class App extends React.Component {
     return requestState === 'failed';
   };
 
+  handleToggleEditMode() {
+    const { editMode, toggleEditMode } = this.props;
+    toggleEditMode(editMode);
+  }
+
   handleSetCurrentChannel(id) {
     const { setCurrentChannel } = this.props;
     setCurrentChannel({ id });
   }
 
   render() {
-    const { channels, currentChannelId, removeChannel } = this.props;
+    const {
+      channels,
+      editMode,
+      currentChannelId,
+      removeChannel,
+      renameChannel,
+    } = this.props;
+
+    const renderEditChannel = item => (
+      <Row key={item.id}>
+        <Col xs={{ span: 8, offset: 1 }}>
+          <RenamedChannelForm channel={item} renameChannel={renameChannel} />
+        </Col>
+        <Col xs={2}>
+          {item.removable && <RemovedChannelModal channel={item} removeChannel={removeChannel} />}
+        </Col>
+      </Row>
+    );
 
     const renderChannel = item => (
       <Nav.Item key={item.id}>
-        <Row>
-          <Col xs={6}>
-            <Nav.Link eventKey={item.id} onClick={() => this.handleSetCurrentChannel(item.id)}>
-              {item.name}
-            </Nav.Link>
-          </Col>
-          { !item.removable ? null : (
-            <>
-              <Col xs={2}>
-                <RenamedChannelModal channelId={item.id} channelName={item.name} />
-              </Col>
-              <Col xs={2}>
-                <RemovedChannelModal
-                  channelId={item.id}
-                  channelName={item.name}
-                  removeChannel={removeChannel}
-                />
-              </Col>
-            </>
-          )}
-        </Row>
+        <Nav.Link eventKey={item.id} onClick={() => this.handleSetCurrentChannel(item.id)}>
+          {item.name}
+        </Nav.Link>
       </Nav.Item>
     );
 
@@ -98,9 +109,18 @@ class App extends React.Component {
             <Row>
               <Col md={4} className="mb-5">
                 <Nav variant="pills" className="flex-column mb-5">
-                  {channels.map(renderChannel)}
+                  {channels.map(editMode ? renderEditChannel : renderChannel)}
                 </Nav>
                 <NewChannelModal />
+                <Button
+                  variant="outline-info"
+                  size="lg"
+                  block
+                  className="mt-2"
+                  onClick={() => this.handleToggleEditMode()}
+                >
+                  {editMode ? 'Сохранить' : 'Редактировать'}
+                </Button>
               </Col>
               <Col md={{ span: 7, offset: 1 }} className="mb-5">
                 <Tab.Content>

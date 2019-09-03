@@ -7,8 +7,7 @@ const MyVerticallyCenteredModal = (props) => {
   const {
     show,
     onHide,
-    channelId,
-    channelName,
+    channel,
     removeChannel,
   } = props;
 
@@ -24,7 +23,7 @@ const MyVerticallyCenteredModal = (props) => {
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
           Удалить канал #
-          {channelName}
+          {channel.name}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body className="my-4">
@@ -37,7 +36,7 @@ const MyVerticallyCenteredModal = (props) => {
         <Button
           variant="info"
           className="ml-2"
-          onClick={() => handleRemoveChannel(channelId)}
+          onClick={() => handleRemoveChannel(channel.id)}
         >
           Удалить
         </Button>
@@ -56,7 +55,7 @@ const RemovedChannelModal = (props) => {
         size="sm"
         onClick={() => setModalShow(true)}
       >
-        del
+        X
       </Button>
 
       <MyVerticallyCenteredModal

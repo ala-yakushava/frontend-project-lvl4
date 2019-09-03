@@ -1,11 +1,10 @@
-import { omit, without } from 'lodash';
-import gon from 'gon';
+import { omit, without, pickBy } from 'lodash';
 import { combineReducers } from 'redux';
 import { handleActions } from 'redux-actions';
 import { reducer as formReducer } from 'redux-form';
 
 import * as actions from '../actions';
-import normalize from '../../lib/normalize';
+import initData from '../initData';
 
 const requestState = handleActions({
   [actions.updateDataRequest]() {
@@ -23,7 +22,13 @@ const currentChannelId = handleActions({
   [actions.setCurrentChannel](state, { payload: { id } }) {
     return id;
   },
-}, gon.currentChannelId);
+}, initData.currentChannelId);
+
+const editMode = handleActions({
+  [actions.toggleEditMode](state, { payload: edit }) {
+    return !edit;
+  },
+}, false);
 
 const channels = handleActions({
   [actions.getNewChannel](state, { payload: { attributes } }) {
@@ -49,7 +54,7 @@ const channels = handleActions({
       allIds,
     };
   },
-}, normalize(gon.channels));
+}, initData.channels);
 
 const messages = handleActions({
   [actions.getNewMessage](state, { payload: { attributes } }) {
@@ -60,11 +65,21 @@ const messages = handleActions({
       allIds: [...allIds, attributes.id],
     };
   },
-}, normalize(gon.messages));
+  [actions.getRemovedChannel](state, { payload: { id } }) {
+    const { byId, allIds } = state;
+    const deletedMessages = pickBy(byId, { channelId: id });
+    const ids = Object.keys(deletedMessages).map(i => +i);
+    return {
+      byId: omit(byId, ids),
+      allIds: without(allIds, ...ids),
+    };
+  },
+}, initData.messages);
 
 export default combineReducers({
   requestState,
   currentChannelId,
+  editMode,
   channels,
   messages,
   form: formReducer,
