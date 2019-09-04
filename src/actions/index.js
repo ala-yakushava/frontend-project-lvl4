@@ -15,30 +15,6 @@ export const updateDataRequest = createAction('DATA_UPDATE_REQUEST');
 export const updateDataSuccess = createAction('DATA_UPDATE_SUCCESS');
 export const updateDataFailure = createAction('DATA_UPDATE_FAILURE');
 
-export const addMessage = (data, channelId) => async (dispatch) => {
-  dispatch(updateDataRequest());
-  try {
-    const url = routes.channelMessagesPath(channelId);
-    await axios.post(url, data);
-    dispatch(updateDataSuccess());
-  } catch (e) {
-    dispatch(updateDataFailure());
-    throw e;
-  }
-};
-
-export const addChannel = data => async (dispatch) => {
-  dispatch(updateDataRequest());
-  try {
-    const url = routes.channelsPath();
-    await axios.post(url, data);
-    dispatch(updateDataSuccess());
-  } catch (e) {
-    dispatch(updateDataFailure());
-    throw e;
-  }
-};
-
 export const removeChannel = id => async (dispatch) => {
   dispatch(updateDataRequest());
   try {

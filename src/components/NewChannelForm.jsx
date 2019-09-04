@@ -1,52 +1,56 @@
+import axios from 'axios';
 import React from 'react';
-import { connect } from 'react-redux';
-import { Field, reduxForm } from 'redux-form';
+import { Field, reduxForm, SubmissionError } from 'redux-form';
 
-import * as actions from '../actions';
+import routes from '../routes';
 
-const mapStateToProps = (state) => {
-  const { requestState } = state;
-  return { requestState };
-};
+const NewChannelForm = (props) => {
+  const {
+    onHide,
+    handleSubmit,
+    submitting,
+    pristine,
+    error,
+  } = props;
 
-const actionCreators = {
-  addChannel: actions.addChannel,
-};
-
-@connect(mapStateToProps, actionCreators)
-@reduxForm({ form: 'newChannel' })
-class NewChannelForm extends React.Component {
-  handleSubmit = ({ channelName }) => {
-    const { addChannel, onHide } = this.props;
+  const createChannel = ({ channelName }) => {
     const data = { attributes: { name: channelName } };
-    addChannel({ data });
-    onHide();
+    const url = routes.channelsPath();
+
+    return axios.post(url, { data })
+      .then(() => {
+        onHide();
+      })
+      .catch(() => {
+        throw new SubmissionError({
+          _error: 'Проверьте подключение к сети',
+        });
+      });
   };
 
-  render() {
-    const { handleSubmit, submitting, pristine } = this.props;
-    const isDisabled = submitting || pristine;
+  const isDisabled = submitting || pristine;
 
-    return (
-      <form onSubmit={handleSubmit(this.handleSubmit)}>
-        <div className="form-group row">
-          <div className="col-sm-8">
-            <Field
-              component="input"
-              type="text"
-              name="channelName"
-              className="form-control form-control-lg"
-              placeholder="Название канала"
-              required
-            />
-          </div>
-          <button type="submit" className="btn btn-lg btn-info" disabled={isDisabled}>
-            Создать
-          </button>
+  return (
+    <form onSubmit={handleSubmit(createChannel)}>
+      <div className="form-group row">
+        <div className="col-sm-8">
+          <Field
+            component="input"
+            type="text"
+            name="channelName"
+            className="form-control form-control-lg"
+            placeholder="Название канала"
+            required
+          />
+          {error && <span className="text-danger position-absolute">{error}</span>}
+          {submitting && <span className="text-warning position-absolute">Coздание канала...</span>}
         </div>
-      </form>
-    );
-  }
-}
+        <button type="submit" className="btn btn-lg btn-info" disabled={isDisabled}>
+          Создать
+        </button>
+      </div>
+    </form>
+  );
+};
 
-export default NewChannelForm;
+export default reduxForm({ form: 'newChannel' })(NewChannelForm);
