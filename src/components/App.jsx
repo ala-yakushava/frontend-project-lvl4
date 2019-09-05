@@ -6,6 +6,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Nav from 'react-bootstrap/Nav';
 import Button from 'react-bootstrap/Button';
+import { withTranslation } from 'react-i18next';
 
 import * as actions from '../actions';
 import { channelsSelector } from '../selectors';
@@ -33,19 +34,20 @@ const actionCreators = {
   removeChannel: actions.removeChannel,
   renameChannel: actions.renameChannel,
   getNewChannel: actions.getNewChannel,
-  getRemovedChannel: actions.getRemovedChannel,
+  deleteChannel: actions.deleteChannel,
   getRenamedChannel: actions.getRenamedChannel,
 };
 
 @connect(mapStateToProps, actionCreators)
+@withTranslation()
 class App extends React.Component {
   componentDidMount() {
-    const { getNewChannel, getRemovedChannel, getRenamedChannel } = this.props;
+    const { getNewChannel, deleteChannel, getRenamedChannel } = this.props;
     const port = process.env.PORT;
     const socket = io(port);
 
     socket.on('newChannel', data => getNewChannel(data.data));
-    socket.on('removeChannel', data => getRemovedChannel(data.data));
+    socket.on('removeChannel', data => deleteChannel(data.data));
     socket.on('renameChannel', data => getRenamedChannel(data.data));
   }
 
@@ -71,6 +73,7 @@ class App extends React.Component {
       currentChannelId,
       removeChannel,
       renameChannel,
+      t,
     } = this.props;
 
     const renderEditChannel = item => (
@@ -119,7 +122,7 @@ class App extends React.Component {
                   className="mt-2"
                   onClick={() => this.handleToggleEditMode()}
                 >
-                  {editMode ? 'Сохранить' : 'Редактировать'}
+                  {editMode ? t('button.save') : t('button.edit')}
                 </Button>
               </Col>
               <Col md={{ span: 7, offset: 1 }} className="mb-5">

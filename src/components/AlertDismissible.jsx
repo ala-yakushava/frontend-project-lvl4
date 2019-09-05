@@ -1,13 +1,15 @@
 import React from 'react';
 import Alert from 'react-bootstrap/Alert';
+import { useTranslation } from 'react-i18next';
 
 const AlertDismissible = () => {
   const [show, setShow] = React.useState(true);
+  const { t } = useTranslation();
 
   if (show) {
     return (
       <Alert variant="danger" onClose={() => setShow(false)} dismissible>
-        <div className="container">Ошибка при отправке данных. Проверьте подключение к сети и попробуйте еще раз.</div>
+        <div className="container">{t('alert.error')}</div>
       </Alert>
     );
   }

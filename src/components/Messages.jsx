@@ -1,6 +1,7 @@
 import io from 'socket.io-client';
 import React from 'react';
 import { connect } from 'react-redux';
+import { withTranslation } from 'react-i18next';
 
 import * as actions from '../actions';
 import { filteredMessagesSelector } from '../selectors';
@@ -15,6 +16,7 @@ const actionCreators = {
 };
 
 @connect(mapStateToProps, actionCreators)
+@withTranslation()
 class Messages extends React.Component {
   componentDidMount() {
     const { getNewMessage } = this.props;
@@ -25,10 +27,10 @@ class Messages extends React.Component {
   }
 
   render() {
-    const { messages } = this.props;
+    const { messages, t } = this.props;
 
     if (messages.length === 0) {
-      return <p className="mb-5">Здесь пока пусто...</p>;
+      return <p className="mb-5">{t('text.empty')}</p>;
     }
 
     return (

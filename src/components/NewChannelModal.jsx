@@ -2,11 +2,13 @@ import React from 'react';
 import Modal from 'react-bootstrap/Modal';
 import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
 import Button from 'react-bootstrap/Button';
+import { useTranslation } from 'react-i18next';
 
 import NewChannelForm from './NewChannelForm';
 
 const MyVerticallyCenteredModal = (props) => {
   const { onHide } = props;
+  const { t } = useTranslation();
 
   return (
     <Modal
@@ -16,7 +18,7 @@ const MyVerticallyCenteredModal = (props) => {
     >
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
-          Новый канал
+          {t('modal.new_channel.title')}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body className="my-4">
@@ -28,6 +30,7 @@ const MyVerticallyCenteredModal = (props) => {
 
 const NewChannelModal = () => {
   const [modalShow, setModalShow] = React.useState(false);
+  const { t } = useTranslation();
 
   return (
     <ButtonToolbar>
@@ -37,7 +40,7 @@ const NewChannelModal = () => {
         block
         onClick={() => setModalShow(true)}
       >
-        Создать канал
+        {t('button.create_channel')}
       </Button>
 
       <MyVerticallyCenteredModal

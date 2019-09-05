@@ -8,10 +8,11 @@ import reducers from './reducers';
 import App from './components/App';
 import UserContext from './UserContext';
 import getUserName from '../lib/getUserName';
+import '../lib/i18n';
 
 /* eslint-disable no-underscore-dangle */
 const ext = window.__REDUX_DEVTOOLS_EXTENSION__;
-const devtoolMiddleware = ext && ext();
+const devtoolMiddleware = ext ? ext() : f => f;
 /* eslint-enable */
 
 const store = createStore(

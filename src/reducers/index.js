@@ -39,7 +39,7 @@ const channels = handleActions({
       allIds: [...allIds, attributes.id],
     };
   },
-  [actions.getRemovedChannel](state, { payload: { id } }) {
+  [actions.deleteChannel](state, { payload: { id } }) {
     const { byId, allIds } = state;
     return {
       byId: omit(byId, id),
@@ -65,7 +65,7 @@ const messages = handleActions({
       allIds: [...allIds, attributes.id],
     };
   },
-  [actions.getRemovedChannel](state, { payload: { id } }) {
+  [actions.deleteChannel](state, { payload: { id } }) {
     const { byId, allIds } = state;
     const deletedMessages = pickBy(byId, { channelId: id });
     const ids = Object.keys(deletedMessages).map(i => +i);

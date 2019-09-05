@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React from 'react';
 import { Field, reduxForm, SubmissionError } from 'redux-form';
+import { useTranslation } from 'react-i18next';
 
 import routes from '../routes';
 
@@ -13,6 +14,8 @@ const NewChannelForm = (props) => {
     error,
   } = props;
 
+  const { t } = useTranslation();
+
   const createChannel = ({ channelName }) => {
     const data = { attributes: { name: channelName } };
     const url = routes.channelsPath();
@@ -23,7 +26,7 @@ const NewChannelForm = (props) => {
       })
       .catch(() => {
         throw new SubmissionError({
-          _error: 'Проверьте подключение к сети',
+          _error: t('note.error'),
         });
       });
   };
@@ -39,14 +42,14 @@ const NewChannelForm = (props) => {
             type="text"
             name="channelName"
             className="form-control form-control-lg"
-            placeholder="Название канала"
+            placeholder={t('placeholder.channel_name')}
             required
           />
           {error && <span className="text-danger position-absolute">{error}</span>}
-          {submitting && <span className="text-warning position-absolute">Coздание канала...</span>}
+          {submitting && <span className="text-warning position-absolute">{t('note.create_channel')}</span>}
         </div>
         <button type="submit" className="btn btn-lg btn-info" disabled={isDisabled}>
-          Создать
+          {t('button.create')}
         </button>
       </div>
     </form>

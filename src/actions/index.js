@@ -8,7 +8,7 @@ export const toggleEditMode = createAction('MODE_EDIT_TOGGLE');
 
 export const getNewMessage = createAction('MESSAGE_ADDED_GET');
 export const getNewChannel = createAction('CHANNEL_ADDED_GET');
-export const getRemovedChannel = createAction('CHANNEL_REMOVED_GET');
+export const deleteChannel = createAction('CHANNEL_REMOVED_GET');
 export const getRenamedChannel = createAction('CHANNEL_RENAMED_GET');
 
 export const updateDataRequest = createAction('DATA_UPDATE_REQUEST');
