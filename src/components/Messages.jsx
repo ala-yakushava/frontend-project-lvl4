@@ -1,9 +1,8 @@
 import io from 'socket.io-client';
 import React from 'react';
-import { connect } from 'react-redux';
 import { withTranslation } from 'react-i18next';
 
-import * as actions from '../actions';
+import connect from '../connect';
 import { filteredMessagesSelector } from '../selectors';
 
 const mapStateToProps = (state) => {
@@ -11,11 +10,7 @@ const mapStateToProps = (state) => {
   return { messages };
 };
 
-const actionCreators = {
-  getNewMessage: actions.getNewMessage,
-};
-
-@connect(mapStateToProps, actionCreators)
+@connect(mapStateToProps)
 @withTranslation()
 class Messages extends React.Component {
   componentDidMount() {

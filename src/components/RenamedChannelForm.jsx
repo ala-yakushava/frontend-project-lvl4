@@ -10,14 +10,11 @@ const RenamedChannelForm = (props) => {
     renameChannel({ data }, channel.id);
   };
 
-  return (
-    channel.removable
-      ? (
-        <Form.Control plaintext defaultValue={channel.name} onBlur={handleSubmit} />
-      ) : (
-        <Form.Control plaintext defaultValue={channel.name} readOnly disabled />
-      )
-  );
+  if (channel.removable) {
+    return <Form.Control plaintext defaultValue={channel.name} onBlur={handleSubmit} />;
+  }
+
+  return <Form.Control plaintext defaultValue={channel.name} readOnly disabled />;
 };
 
 export default RenamedChannelForm;

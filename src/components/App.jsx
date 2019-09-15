@@ -1,6 +1,5 @@
 import io from 'socket.io-client';
 import React from 'react';
-import { connect } from 'react-redux';
 import Tab from 'react-bootstrap/Tab';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -8,7 +7,7 @@ import Nav from 'react-bootstrap/Nav';
 import Button from 'react-bootstrap/Button';
 import { withTranslation } from 'react-i18next';
 
-import * as actions from '../actions';
+import connect from '../connect';
 import { channelsSelector } from '../selectors';
 import Messages from './Messages';
 import NewMessageForm from './NewMessageForm';
@@ -28,17 +27,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-const actionCreators = {
-  setCurrentChannel: actions.setCurrentChannel,
-  toggleEditMode: actions.toggleEditMode,
-  removeChannel: actions.removeChannel,
-  renameChannel: actions.renameChannel,
-  getNewChannel: actions.getNewChannel,
-  deleteChannel: actions.deleteChannel,
-  getRenamedChannel: actions.getRenamedChannel,
-};
-
-@connect(mapStateToProps, actionCreators)
+@connect(mapStateToProps)
 @withTranslation()
 class App extends React.Component {
   componentDidMount() {
@@ -56,12 +45,12 @@ class App extends React.Component {
     return requestState === 'failed';
   };
 
-  handleToggleEditMode() {
+  handleToggleEditMode = () => {
     const { editMode, toggleEditMode } = this.props;
     toggleEditMode(editMode);
   }
 
-  handleSetCurrentChannel(id) {
+  handleSetCurrentChannel = id => () => {
     const { setCurrentChannel } = this.props;
     setCurrentChannel({ id });
   }
@@ -89,7 +78,7 @@ class App extends React.Component {
 
     const renderChannel = item => (
       <Nav.Item key={item.id}>
-        <Nav.Link eventKey={item.id} onClick={() => this.handleSetCurrentChannel(item.id)}>
+        <Nav.Link eventKey={item.id} onClick={this.handleSetCurrentChannel(item.id)}>
           {item.name}
         </Nav.Link>
       </Nav.Item>
@@ -106,7 +95,7 @@ class App extends React.Component {
 
     return (
       <>
-        {this.isError() ? <AlertDismissible /> : null}
+        {this.isError() && <AlertDismissible />}
         <div className="container mt-5">
           <Tab.Container id="left-tabs-example" defaultActiveKey={currentChannelId}>
             <Row>
@@ -120,7 +109,7 @@ class App extends React.Component {
                   size="lg"
                   block
                   className="mt-2"
-                  onClick={() => this.handleToggleEditMode()}
+                  onClick={this.handleToggleEditMode}
                 >
                   {editMode ? t('button.save') : t('button.edit')}
                 </Button>

@@ -13,7 +13,7 @@ const MyVerticallyCenteredModal = (props) => {
   } = props;
 
   const { t } = useTranslation();
-  const handleRemoveChannel = id => removeChannel(id);
+  const handleRemoveChannel = id => () => removeChannel(id);
 
   return (
     <Modal
@@ -38,7 +38,7 @@ const MyVerticallyCenteredModal = (props) => {
         <Button
           variant="info"
           className="ml-2"
-          onClick={() => handleRemoveChannel(channel.id)}
+          onClick={handleRemoveChannel(channel.id)}
         >
           {t('button.delete')}
         </Button>

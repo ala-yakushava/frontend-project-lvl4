@@ -1,9 +1,9 @@
 import axios from 'axios';
 import React from 'react';
-import { connect } from 'react-redux';
 import { Field, reduxForm, SubmissionError } from 'redux-form';
 import { withTranslation } from 'react-i18next';
 
+import connect from '../connect';
 import UserContext from '../UserContext';
 import routes from '../routes';
 
