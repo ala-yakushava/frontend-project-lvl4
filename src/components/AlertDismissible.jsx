@@ -6,15 +6,13 @@ const AlertDismissible = () => {
   const [show, setShow] = React.useState(true);
   const { t } = useTranslation();
 
-  if (show) {
-    return (
-      <Alert variant="danger" onClose={() => setShow(false)} dismissible>
-        <div className="container">{t('alert.error')}</div>
-      </Alert>
-    );
-  }
+  if (!show) return null;
 
-  return null;
+  return (
+    <Alert variant="danger" onClose={() => setShow(false)} dismissible>
+      <div className="container">{t('alert.error')}</div>
+    </Alert>
+  );
 };
 
 export default AlertDismissible;

@@ -1,4 +1,3 @@
-import io from 'socket.io-client';
 import React from 'react';
 import Tab from 'react-bootstrap/Tab';
 import Row from 'react-bootstrap/Row';
@@ -8,7 +7,7 @@ import Button from 'react-bootstrap/Button';
 import { withTranslation } from 'react-i18next';
 
 import connect from '../connect';
-import { channelsSelector } from '../selectors';
+import { channelsSelector, filteredMessagesSelector } from '../selectors';
 import Messages from './Messages';
 import NewMessageForm from './NewMessageForm';
 import NewChannelModal from './NewChannelModal';
@@ -18,11 +17,13 @@ import AlertDismissible from './AlertDismissible';
 
 const mapStateToProps = (state) => {
   const channels = channelsSelector(state);
+  const messages = filteredMessagesSelector(state);
   const { editMode, currentChannelId, requestState } = state;
   return {
     editMode,
     requestState,
     channels,
+    messages,
     currentChannelId,
   };
 };
@@ -30,16 +31,6 @@ const mapStateToProps = (state) => {
 @connect(mapStateToProps)
 @withTranslation()
 class App extends React.Component {
-  componentDidMount() {
-    const { getNewChannel, deleteChannel, getRenamedChannel } = this.props;
-    const port = process.env.PORT;
-    const socket = io(port);
-
-    socket.on('newChannel', data => getNewChannel(data.data));
-    socket.on('removeChannel', data => deleteChannel(data.data));
-    socket.on('renameChannel', data => getRenamedChannel(data.data));
-  }
-
   isError = () => {
     const { requestState } = this.props;
     return requestState === 'failed';
@@ -58,6 +49,7 @@ class App extends React.Component {
   render() {
     const {
       channels,
+      messages,
       editMode,
       currentChannelId,
       removeChannel,
@@ -118,7 +110,7 @@ class App extends React.Component {
                 <Tab.Content>
                   {channels.map(renderPanel)}
                 </Tab.Content>
-                <Messages />
+                <Messages messages={messages} />
                 <NewMessageForm />
               </Col>
             </Row>

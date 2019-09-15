@@ -3,7 +3,9 @@ import { render } from 'react-dom';
 import { createStore, applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
+import io from 'socket.io-client';
 
+import * as actions from './actions';
 import reducers from './reducers';
 import App from './components/App';
 import UserContext from './UserContext';
@@ -23,10 +25,29 @@ const store = createStore(
   ),
 );
 
+const initializeSockets = () => {
+  const port = process.env.PORT;
+  const socket = io(port);
+
+  const {
+    getNewChannel,
+    deleteChannel,
+    getRenamedChannel,
+    getNewMessage,
+  } = actions;
+
+  socket.on('newChannel', data => store.dispatch(getNewChannel(data.data)));
+  socket.on('removeChannel', data => store.dispatch(deleteChannel(data.data)));
+  socket.on('renameChannel', data => store.dispatch(getRenamedChannel(data.data)));
+  socket.on('newMessage', data => store.dispatch(getNewMessage(data.data)));
+};
+
 export default () => {
   const user = {
     name: getUserName(),
   };
+
+  initializeSockets();
 
   render(
     <Provider store={store}>
